@@ -10,3 +10,11 @@ variable bucket {
 variable backup-user {
   type = string
 }
+
+variable project {
+  type = string
+}
+
+variable environment {
+  type = string
+}

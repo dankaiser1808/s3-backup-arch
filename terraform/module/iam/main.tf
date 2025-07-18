@@ -1,6 +1,11 @@
 
 resource "aws_iam_user" "dk-arch-restic-user" {
     name = var.backup-user-name
+
+    tags = {
+      Project = var.project
+      Environment = var.environment
+    }
 }
 
 resource "aws_iam_access_key" "dk-arch-restic-key" {
@@ -32,9 +37,14 @@ resource "aws_iam_policy" "dk-arch-restic-policy" {
         ]
     })
 
+    tags = {
+      Project = var.project
+      Environment = var.environment
+    }
 }
 
 resource "aws_iam_user_policy_attachment" "dk-arch-restic-user-policy-attachement" {
     policy_arn = aws_iam_policy.dk-arch-restic-policy.arn
     user = aws_iam_user.dk-arch-restic-user.name
+
 }
