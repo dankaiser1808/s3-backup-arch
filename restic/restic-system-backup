@@ -1,0 +1,27 @@
+#!/bin/bash
+
+export RESTIC_REPOSITORY=""
+export RESTIC_PASSWORD=""
+
+export AWS_ACCESS_KEY_ID=""
+export AWS_SECRET_ACCESS_KEY=""
+
+
+
+# Run the backup for system files only
+echo "Starting system backup at $(date)"
+restic backup \
+  /etc \
+  /boot \
+  --tag "system" \
+  --verbose
+
+# Maintain backups - Keep 1 daily, 1 weekly, and 1 monthly backups
+echo "Pruning old backups..."
+restic forget \
+  --keep-daily 1 \
+  --keep-weekly 1 \
+  --keep-monthly 1 \
+  --prune
+
+echo "System backup completed at $(date)"

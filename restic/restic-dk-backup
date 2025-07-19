@@ -1,0 +1,53 @@
+#!/bin/bash
+
+
+export RESTIC_REPOSITORY=""
+export RESTIC_PASSWORD=""
+
+export AWS_ACCESS_KEY_ID=""
+export AWS_SECRET_ACCESS_KEY=""
+
+# Export package lists
+echo "Exporting package lists..."
+mkdir -p ~/Backups/package-lists
+pacman -Qqe >/home/dk/Backups/package-lists/all-packages.txt
+pacman -Qqen >/home/dk/Backups/package-lists/native-packages.txt
+pacman -Qqem >/home/dk/Backups/package-lists/foreign-packages.txt
+
+# Run the backup
+echo "Starting dk backup at $(date)"
+
+restic backup \
+	/home/dk \
+	--exclude="*/Cache/*" \
+	--exclude=".cache/*" \
+	--exclude="/home/dk/.mozilla/firefox/" \
+	--exclude="/home/dk/.steam" \
+	--exclude="/home/dk/.local/share/Steam" \
+	--exclude="*/ComputeCache/*" \
+	--exclude="*.tmp" \
+	--exclude="*.log" \
+	--exclude="**/.env" \
+	--exclude="**/.envrc" \
+	--exclude="/home/dk/yay" \
+	--exclude="/home/dk/Downloads" \
+	--exclude="*/node_modules/*" \
+	--exclude="/home/dk/.npm" \
+	--exclude="/home/dk/github.com" \
+	--exclude="/home/dk/.config/alacritty/themes" \
+	--tag "dk-home" \
+	--verbose
+
+# Maintain backups - Keep 1
+restic forget \
+ 	--keep-daily 1 \
+ 	--keep-weekly 1 \
+ 	--keep-monthly 1 \
+ 	--prune \
+ 	--tag "dk-home"
+
+# Check repository integrity
+echo "Checking repository integrity..."
+restic check
+
+echo "System backup completed at $(date)"
