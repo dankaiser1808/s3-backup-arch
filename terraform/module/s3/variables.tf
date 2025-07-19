@@ -13,3 +13,7 @@ variable "project" {
 variable "environment" {
   type = string
 }
+
+variable "bucket-versioning-status" {
+  type = string
+}

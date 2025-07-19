@@ -7,3 +7,10 @@ resource "aws_s3_bucket" "dk-arch-backups" {
       Environment = var.environment
     }
 }
+
+resource "aws_s3_bucket_versioning" "versioning_example" {
+  bucket = aws_s3_bucket.dk-arch-backups.id
+  versioning_configuration {
+    status = var.bucket-versioning-status
+  }
+}
