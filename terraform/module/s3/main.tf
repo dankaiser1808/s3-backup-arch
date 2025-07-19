@@ -8,7 +8,7 @@ resource "aws_s3_bucket" "dk-arch-backups" {
     }
 }
 
-resource "aws_s3_bucket_versioning" "versioning_example" {
+resource "aws_s3_bucket_versioning" "dk-arch-backups-versioning" {
   bucket = aws_s3_bucket.dk-arch-backups.id
   versioning_configuration {
     status = var.bucket-versioning-status
